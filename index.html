@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <style>
+      @font-face {
+        font-family: century_gothic; /* set name */
+        src: url("Century-Gothic-Bold.ttf"); /* url of the font */
+      }
+      body {
+        background-color: black;
+        color: white;
+        font-family: century_gothic;
+      }
+
+      label {
+        background: linear-gradient(to bottom, #5ce581, #14b13e);
+        background-clip: text;
+        color: transparent;
+      }
+
+      #time_counter {
+        font-size: 4em;
+      }
+    </style>
+    <script>
+      const zeroPad = (num, places) => String(num).padStart(places, '0')
+
+      function refreshTime() {
+        let time_counter = document.getElementById("time_counter");
+        let completion = document.getElementById("completion");
+
+        let start = new Date(2026, 0, 1, 0, 0);
+        let target = new Date(2027, 0, 1, 0, 0);
+        let now = new Date();
+        let offset = now - start;
+        let total = target - start;
+
+        // Update completion
+        let completion_percentage = Math.floor((offset / total) * 100000) / 1000;
+        completion.innerText = `Completion: ${completion_percentage}%`;
+
+        // Update clock
+        let seconds = Math.floor(offset / 1000);
+        let centiseconds = Math.floor((offset - seconds * 1000)/10);
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
+        console.log(hours);
+        seconds = seconds - minutes * 60;
+        minutes = minutes - hours * 60;
+        let time = `${zeroPad(seconds, 2)}.${zeroPad(centiseconds, 2)}`;
+        if (minutes > 0 && hours == 0) {
+          time = `${minutes}:${time}`
+        }
+        if (hours > 0) {
+          time = `${hours}:${zeroPad(minutes, 2)}:${time}`
+        }
+        time_counter.innerText = time;
+        setInterval(refreshTime, 10);
+      }
+      setInterval(refreshTime, 10);
+    </script>
+  </head>
+
+  <body>
+    <label id="time_counter">14:59:73</label>
+    <br>
+    <label id="completion">Completion: 0.002%</label>
+  </body>
+
+</html>
